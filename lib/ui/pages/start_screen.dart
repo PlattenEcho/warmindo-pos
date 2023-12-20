@@ -50,7 +50,7 @@ class _StartScreenState extends State<StartScreen> {
                   ),
                 ],
               )),
-              SizedBox(height: MediaQuery.of(context).size.height / 10),
+              SizedBox(height: MediaQuery.of(context).size.height / 4),
               Expanded(
                   child: Container(
                 margin: const EdgeInsets.only(left: 30, right: 30),
@@ -67,14 +67,6 @@ class _StartScreenState extends State<StartScreen> {
                           Navigator.pushNamed(context, '/login-page');
                         }),
                     gapH(21),
-                    ButtonOutline(
-                        text: "Daftar",
-                        textColor: kPrimaryColor,
-                        borderColor: kPrimaryColor,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/signup-page');
-                        }),
-                    gapH(4)
                   ],
                 ),
               ))
