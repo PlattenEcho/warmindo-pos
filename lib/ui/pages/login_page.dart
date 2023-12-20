@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:warmindo_pos/crypt.dart';
 import 'package:warmindo_pos/main.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 import 'package:warmindo_pos/ui/widgets/button.dart';
 import 'package:warmindo_pos/ui/widgets/textfield.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:warmindo_pos/ui/widgets/toast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,52 +16,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // Fungsi untuk melakukan autentikasi
-  Future<void> authenticateUser(BuildContext context) async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    final currentContext = context;
-    // Query ke tabel pengguna dengan email yang diinput pengguna
+  Future<void> authenticateUser(
+      BuildContext context, String username, String password) async {
     final response = await supabase
         .from('pengguna')
-        .select('username, password') // Mengambil kolom username dan password
-        .eq('username', email) // Memeriksa apakah username cocok dengan email
+        .select('username, password')
+        .eq('username', username)
         .single();
 
-    // Jika response tidak null dan password cocok
+    if (response != null) {
+      final user = response;
+      String storedPassword = user['password'].toString();
+      storedPassword = decryptMyData(storedPassword);
 
-    final user = response;
-    final storedPassword = user['password'].toString();
-
-    // Memeriksa apakah password cocok
-    if (storedPassword == password) {
-      // Jika cocok, izinkan pengguna untuk masuk ke halaman berikutnya
-      Navigator.pushNamed(currentContext, '/main-page');
-      return;
+      if (storedPassword == password) {
+        Navigator.pushNamed(context, '/main-page');
+      } else {
+        showToast(context, "Username atau Password yang anda masukkan salah");
+      }
+    } else {
+      showToast(context, "Username atau Password yang anda masukkan salah");
     }
-
-    // Jika email atau password tidak cocok, tampilkan pesan kesalahan
-    showDialog(
-      context: currentContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('Email or password is incorrect.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -88,9 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                 style: blackTextStyle.copyWith(fontSize: 28, fontWeight: bold)),
             gapH24,
             NewForm(
-                controller: _emailController,
-                nama: 'Email',
-                hintText: 'Masukkan Email',
+                controller: _usernameController,
+                nama: 'Username',
+                hintText: 'Masukkan Username',
                 obscureText: false,
                 horizontalPadding: 0),
             gapH12,
@@ -107,7 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                 startColor: kPrimaryColor,
                 endColor: kPrimaryColor,
                 onPressed: () {
-                  authenticateUser(context);
+                  String username = _usernameController.text.trim();
+                  String password = _passwordController.text.trim();
+                  authenticateUser(context, username, password);
                 }),
           ],
         ),
