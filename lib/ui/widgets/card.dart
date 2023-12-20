@@ -62,7 +62,7 @@ class TransaksiCard extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 249, 249, 249),
+                  color: const Color.fromARGB(255, 249, 249, 249),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -168,11 +168,11 @@ class TransaksiCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: 50,
                               child: ElevatedButton(
                                   onPressed: () {
                                     onDelete();
                                   },
+                                  
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: kRedColor,
                                     elevation: 0.0,

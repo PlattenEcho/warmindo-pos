@@ -10,8 +10,8 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  List<String> warungList = ['Warung A', 'Warung B', 'Warung C'];
   String selectedWarung = 'Warung A';
-  List<String> warungList = ['Warung 1', 'Warung 2', 'Warung 3', 'Warung 4'];
 
   @override
   Widget build(BuildContext context) {
