@@ -29,6 +29,9 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  String selectedWarung = 'Warung A';
+  List<String> warungList = ['Warung 1', 'Warung 2', 'Warung 3', 'Warung 4'];
+
   late bool mode = true;
   static const List<String> _status = <String>[
     "Baru",
@@ -159,6 +162,37 @@ class _DetailPageState extends State<DetailPage> {
                   style: blackTextStyle.copyWith(fontWeight: medium),
                 ),
               ],
+            ),
+            DropdownButtonFormField<String>(
+              focusColor: kGreenColor,
+              value: selectedWarung,
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedWarung = newValue!;
+                });
+              },
+              style: blackTextStyle.copyWith(fontSize: 16),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        BorderSide(color: kBlackColor.withOpacity(0.2))),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: kGreenColor),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              icon: Icon(Icons.arrow_drop_down,
+                  color: kGreenColor.withOpacity(0.8)),
+              items: warungList.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
             gapH24,
             Text('Total',
