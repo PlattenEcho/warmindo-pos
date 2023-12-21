@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:warmindo_pos/ui/pages/main_page.dart';
+import 'package:warmindo_pos/ui/pages/transaksi_by_dateshift.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 
@@ -97,7 +99,6 @@ class _DashboardPageState extends State<DashboardPage> {
                   selectedDateText = DateFormat('d/M/y').format(pickedDate);
                   tanggal = pickedDate;
                 });
-
                 getTransaksi();
               },
               child: Align(
@@ -121,7 +122,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     selectedWarung = newValue!;
                     selectedIndex = warungList.indexOf(selectedWarung) + 1;
                   });
-
                   getTransaksi();
                 });
               },
@@ -133,14 +133,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         BorderSide(color: kBlackColor.withOpacity(0.2))),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      BorderSide(color: kGreenColor), // Warna fokus hijau
+                  borderSide: BorderSide(color: kGreenColor),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               icon: Icon(Icons.arrow_drop_down,
-                  color: kGreenColor.withOpacity(0.8)), // Ikona dropdown
+                  color: kGreenColor.withOpacity(0.8)),
               items: warungList.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -258,10 +257,13 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Text("Lihat List Transaksi untuk Shift ini ",
                   style: whiteTextStyle.copyWith(fontWeight: bold)),
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MainPage(pageIndex: 1)));
+                        builder: (context) => TransaksiByDateShift(
+                              selectedIndex: selectedIndex,
+                              tanggal: tanggal,
+                            )));
               },
             ),
           ],
