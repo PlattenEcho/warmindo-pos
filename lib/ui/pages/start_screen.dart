@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:warmindo_pos/ui/pages/login_page.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 import 'package:warmindo_pos/ui/widgets/button.dart';
@@ -64,7 +65,11 @@ class _StartScreenState extends State<StartScreen> {
                         startColor: kPrimaryColor,
                         endColor: kPrimaryColor,
                         onPressed: () {
-                          Navigator.pushNamed(context, '/login-page');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
                         }),
                     gapH(21),
                   ],

@@ -1,16 +1,16 @@
-class User {
+class Pengguna {
   final String id;
   final String username;
   final DateTime createdAt;
   final String profileImageUrl;
-  User({
+  Pengguna({
     required this.id,
     required this.username,
     required this.createdAt,
     required this.profileImageUrl,
   });
 
-  User.fromMap(Map<String, dynamic> map)
+  Pengguna.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         username = map['username'],
         createdAt = DateTime.parse(map['created_at']),
