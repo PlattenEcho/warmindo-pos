@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 
@@ -18,6 +19,47 @@ class _DashboardPageState extends State<DashboardPage> {
   int selectedIndex = 1;
 
   String selectedDateText = "Pilih Tanggal";
+  DateTime tanggal = DateTime.now();
+  int countTransaksi = 0;
+  String hargaRp = "";
+
+  List<Map<String, dynamic>> transaksiData = [];
+  @override
+  void initState() {
+    super.initState();
+    getTransaksi();
+  }
+
+  Future<List<Map<String, dynamic>>> getTransaksi() async {
+    final res = await supabase
+        .from('transaksi')
+        .select()
+        .eq('tanggal', tanggal)
+        .eq('shift', selectedIndex)
+        .count(CountOption.exact);
+
+    final data = res.data;
+    final count = res.count;
+    int harga = 0;
+    int totalHarga = 0;
+    setState(() {
+      transaksiData = data;
+      countTransaksi = count;
+
+      for (var i = 0; i < count; i++) {
+        harga = transaksiData[i]['total'];
+        totalHarga = totalHarga + harga;
+      }
+
+      hargaRp = NumberFormat.currency(
+        locale: 'id',
+        symbol: 'Rp. ',
+        decimalDigits: 0,
+      ).format(totalHarga);
+    });
+
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +91,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 if (pickedDate == null) return;
 
                 setState(() {
-                  selectedDateText = DateFormat('E, d/M/y').format(pickedDate);
+                  selectedDateText = DateFormat('d/M/y').format(pickedDate);
+                  tanggal = pickedDate;
                 });
+
+                getTransaksi();
               },
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -69,7 +114,12 @@ class _DashboardPageState extends State<DashboardPage> {
               isExpanded: true,
               onChanged: (String? newValue) {
                 setState(() {
-                  selectedWarung = newValue!;
+                  setState(() {
+                    selectedWarung = newValue!;
+                    selectedIndex = warungList.indexOf(selectedWarung) + 1;
+                  });
+
+                  getTransaksi();
                 });
               },
               style: blackTextStyle.copyWith(fontSize: 16),
@@ -96,6 +146,7 @@ class _DashboardPageState extends State<DashboardPage> {
               }).toList(),
             ),
             gapH12,
+            //Container Data
             Container(
               padding: const EdgeInsets.only(
                   top: 15, left: 15, right: 15, bottom: 15),
@@ -151,7 +202,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   fontWeight: regular, fontSize: 14),
                             ),
                             Text(
-                              "Rp. 1.000.000,00",
+                              "$hargaRp,00",
                               style: whiteTextStyle.copyWith(
                                   fontWeight: bold, fontSize: 20),
                             )
@@ -178,7 +229,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     fontWeight: regular, fontSize: 14),
                               ),
                               Text(
-                                "25",
+                                countTransaksi.toString(),
                                 style: greenTextStyle.copyWith(
                                     fontWeight: bold, fontSize: 20),
                               )
