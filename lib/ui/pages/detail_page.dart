@@ -30,7 +30,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String selectedWarung = 'Warung A';
-  List<String> warungList = ['Warung 1', 'Warung 2', 'Warung 3', 'Warung 4'];
+  List<String> warungList = ['Warung A', 'Warung B', 'Warung C'];
 
   late bool mode = true;
   static const List<String> _status = <String>[
