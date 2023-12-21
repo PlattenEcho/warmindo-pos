@@ -116,6 +116,7 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
                               "qris": "QRIS",
                               "kartu_debit": "Kartu Debit",
                             };
+                            final diskon = transaction['totaldiskon'];
 
                             final metodePembayaran =
                                 mapPembayaran[transaction['metodepembayaran']];
@@ -171,6 +172,7 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
                                         namaPelanggan: namaPelanggan,
                                         total: "$total,00",
                                         metodePembayaran: metodePembayaran,
+                                        diskon: diskon,
                                       ),
                                     ));
                                 if (updatedStatus != null) {
