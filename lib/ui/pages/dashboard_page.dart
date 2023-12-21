@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
+
+import '../../main.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -10,8 +13,11 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  List<String> warungList = ['Warung A', 'Warung B', 'Warung C'];
-  String selectedWarung = 'Warung A';
+  List<String> warungList = ['Shift 1', 'Shift 2'];
+  String selectedWarung = 'Shift 1';
+  int selectedIndex = 1;
+
+  String selectedDateText = "Pilih Tanggal";
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +27,42 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+              style: ButtonStyle(
+                elevation: const MaterialStatePropertyAll(0),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  side: BorderSide(color: kBlackColor.withOpacity(0.3)),
+                  borderRadius: BorderRadius.circular(10.0),
+                )),
+                backgroundColor: MaterialStateProperty.all(kWhiteColor),
+                minimumSize:
+                    const MaterialStatePropertyAll(Size(double.infinity, 50)),
+              ),
+              onPressed: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  lastDate: DateTime.now(),
+                  firstDate: DateTime(2023, 12, 1),
+                  initialDate: DateTime.now(),
+                );
+                if (pickedDate == null) return;
+
+                setState(() {
+                  selectedDateText = DateFormat('E, d/M/y').format(pickedDate);
+                });
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  selectedDateText,
+                  style: blackTextStyle.copyWith(fontSize: 16),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+            gapH12,
+            //Dropdown Shift
             DropdownButtonFormField<String>(
               focusColor: kGreenColor,
               value: selectedWarung,
@@ -73,16 +115,21 @@ class _DashboardPageState extends State<DashboardPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Warung 1",
+                    selectedWarung,
                     style:
                         greenTextStyle.copyWith(fontWeight: bold, fontSize: 22),
+                  ),
+                  Text(
+                    selectedDateText,
+                    style: greenTextStyle.copyWith(
+                        fontWeight: regular, fontSize: 17),
                   ),
                   gapH12,
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image(
                         fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height / 4,
+                        height: MediaQuery.of(context).size.height / 6,
                         width: MediaQuery.of(context).size.width,
                         image: AssetImage('assets/bg_start.png')),
                   ),
@@ -112,20 +159,32 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                       ),
                       gapW12,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Shift",
-                            style: greenTextStyle.copyWith(
-                                fontWeight: regular, fontSize: 14),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: kBlackColor.withOpacity(0.2),
+                                width: 1.5),
+                            color: kWhiteColor,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          Text(
-                            "1",
-                            style: greenTextStyle.copyWith(
-                                fontWeight: bold, fontSize: 20),
-                          )
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Banyak Transaksi",
+                                style: greenTextStyle.copyWith(
+                                    fontWeight: regular, fontSize: 14),
+                              ),
+                              Text(
+                                "25",
+                                style: greenTextStyle.copyWith(
+                                    fontWeight: bold, fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
