@@ -243,6 +243,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                       namaPelanggan: namaPelanggan,
                                       total: "$total,00",
                                       metodePembayaran: metodePembayaran,
+                                      diskon: diskon,
                                     ),
                                   ));
                               if (updatedStatus != null) {
