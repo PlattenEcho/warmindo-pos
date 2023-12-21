@@ -57,7 +57,7 @@ class _MainAppState extends State<MainApp> {
             //     UserPreferences.getUser() != null ? StartScreen() : MainPage(),
             '/login-page': (context) => const LoginPage(),
             '/main-page': (context) => const MainPage(),
-            '/detail-page': (context) => const DetailPage(
+            '/detail-page': (context) =>  DetailPage(
                   status: 0,
                   date: "",
                   transactionID: "",
