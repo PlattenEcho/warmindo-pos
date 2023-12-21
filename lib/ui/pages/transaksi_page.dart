@@ -67,18 +67,18 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 final shift = transaction['shift'];
                 final noMeja = transaction['kodemeja'];
                 final namaPelanggan = transaction['namapelanggan'];
-                final total = 
-                              NumberFormat.currency(
-                                locale: 'id',
-                                symbol: 'Rp. ',
-                                decimalDigits: 0,
-                              ).format(transaction['total'] - transaction['totaldiskon']);
+                final total = NumberFormat.currency(
+                  locale: 'id',
+                  symbol: 'Rp. ',
+                  decimalDigits: 0,
+                ).format(transaction['total'] - transaction['totaldiskon']);
                 final metodePembayaran = transaction['metodepembayaran'];
 
                 return TransaksiCard(
                   status: status,
                   date: tanggal,
-                  transactionID: "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
+                  transactionID:
+                      "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
                   noMeja: noMeja,
                   namaPelanggan: namaPelanggan,
                   total: total,
@@ -123,7 +123,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
                           builder: (context) => DetailPage(
                             status: status,
                             date: tanggal,
-                            transactionID: "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
+                            transactionID:
+                                "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
                             noMeja: noMeja,
                             namaPelanggan: namaPelanggan,
                             total: total,
