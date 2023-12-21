@@ -140,74 +140,49 @@ class _TransaksiPageState extends State<TransaksiPage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: transactionData?.length,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                if (transactionData == null) {
-                  return CircularProgressIndicator(); // Tampilkan indikator loading jika data masih diambil
-                }
+              child: FutureBuilder(
+                  future: getDataTransaction(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                          child: Text('Tidak ada yang tersedia'));
+                    } else {
+                      // Data fetching is complete, use the data
+                      List<dynamic>? transactionData = snapshot.data;
+                      return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: transactionData?.length,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          final transaction = transactionData?[index];
+                          final status = transaction['status'];
+                          final tanggal = transaction['tanggal'];
+                          final idtransaksi = transaction['idtransaksi'];
+                          final shift = transaction['shift'];
+                          final noMeja = transaction['kodemeja'];
+                          final namaPelanggan = transaction['namapelanggan'];
+                          final total = NumberFormat.currency(
+                            locale: 'id',
+                            symbol: 'Rp. ',
+                            decimalDigits: 0,
+                          ).format(transaction['total'] -
+                              transaction['totaldiskon']);
 
-                final transaction = transactionData?[index];
-                final status = transaction['status'];
-                final tanggal = transaction['tanggal'];
-                final idtransaksi = transaction['idtransaksi'];
-                final shift = transaction['shift'];
-                final noMeja = transaction['kodemeja'];
-                final namaPelanggan = transaction['namapelanggan'];
-                final total = NumberFormat.currency(
-                  locale: 'id',
-                  symbol: 'Rp. ',
-                  decimalDigits: 0,
-                ).format(transaction['total'] - transaction['totaldiskon']);
-                final metodePembayaran =
-                    transaction['metodepembayaran'].replaceAll('_', ' ');
+                          Map<String, dynamic> mapPembayaran = {
+                            "cash": "Cash",
+                            "qris": "QRIS",
+                            "kartu_debit": "Kartu Debit",
+                          };
 
-                return TransaksiCard(
-                  status: status,
-                  date: tanggal,
-                  transactionID:
-                      "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
-                  noMeja: noMeja,
-                  namaPelanggan: namaPelanggan,
-                  total: "$total,00",
-                  metodePembayaran: metodePembayaran,
-                  onDelete: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Konfirmasi'),
-                          content: const Text(
-                            'Apakah Anda yakin ingin menghapus transaksi ini?',
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(false);
-                              },
-                              child: Text('Tidak'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                              },
-                              child: Text('Ya'),
-                            ),
-                          ],
-                        );
-                      },
-                    ).then((shouldDelete) {
-                      if (shouldDelete ?? false) {}
-                    });
-                  },
-                  onTap: () async {
-                    final updatedStatus = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailPage(
+                          final metodePembayaran =
+                              mapPembayaran[transaction['metodepembayaran']];
+
+                          return TransaksiCard(
                             status: status,
                             date: tanggal,
                             transactionID:
@@ -216,16 +191,59 @@ class _TransaksiPageState extends State<TransaksiPage> {
                             namaPelanggan: namaPelanggan,
                             total: "$total,00",
                             metodePembayaran: metodePembayaran,
-                          ),
-                        ));
-                    if (updatedStatus != null) {
-                      fetchData();
+                            onDelete: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Konfirmasi'),
+                                    content: const Text(
+                                      'Apakah Anda yakin ingin menghapus transaksi ini?',
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                        child: Text('Tidak'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                        child: Text('Ya'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ).then((shouldDelete) {
+                                if (shouldDelete ?? false) {}
+                              });
+                            },
+                            onTap: () async {
+                              final updatedStatus = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailPage(
+                                      status: status,
+                                      date: tanggal,
+                                      transactionID:
+                                          "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
+                                      noMeja: noMeja,
+                                      namaPelanggan: namaPelanggan,
+                                      total: "$total,00",
+                                      metodePembayaran: metodePembayaran,
+                                    ),
+                                  ));
+                              if (updatedStatus != null) {
+                                fetchData();
+                              }
+                            },
+                          );
+                        },
+                      );
                     }
-                  },
-                );
-              },
-            ),
-          ),
+                  })),
         ],
       ),
     );

@@ -7,6 +7,7 @@ import 'package:warmindo_pos/ui/pages/login_page.dart';
 import 'package:warmindo_pos/ui/pages/main_page.dart';
 import 'package:warmindo_pos/ui/pages/start_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:warmindo_pos/ui/pages/transaksi_by_dateshift.dart';
 import 'package:warmindo_pos/ui/pages/transaksi_page.dart';
 
 import 'cubit/page_cubit.dart';
@@ -58,13 +59,15 @@ class _MainAppState extends State<MainApp> {
             },
           ),
           routes: {
-            // '/': (context) =>
-            //     UserPreferences.getUser() != null ? StartScreen() : MainPage(),
             '/login-page': (context) => const LoginPage(),
             '/main-page': (context) => const MainPage(
                   pageIndex: 0,
                 ),
             '/transaksi-page': (context) => const TransaksiPage(),
+            '/transaksi-dateshift': (context) => TransaksiByDateShift(
+                  selectedIndex: 0,
+                  tanggal: DateTime.now(),
+                ),
             '/detail-page': (context) => DetailPage(
                   status: 0,
                   date: "",
