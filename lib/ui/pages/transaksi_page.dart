@@ -136,6 +136,15 @@ class _TransaksiPageState extends State<TransaksiPage> {
                     );
                   }).toList(),
                 ),
+
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 61, 200, 66)),
+                  ),
+                  child: Text('Tambah', style:whiteTextStyle.copyWith(fontWeight: bold)),
+                ),
               ],
             ),
           ),
@@ -164,6 +173,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 ).format(transaction['total'] - transaction['totaldiskon']);
                 final metodePembayaran =
                     transaction['metodepembayaran'].replaceAll('_', ' ');
+                final diskon = transaction['totaldiskon'];
 
                 return TransaksiCard(
                   status: status,
@@ -216,6 +226,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                             namaPelanggan: namaPelanggan,
                             total: "$total,00",
                             metodePembayaran: metodePembayaran,
+                            diskon: diskon,
                           ),
                         ));
                     if (updatedStatus != null) {

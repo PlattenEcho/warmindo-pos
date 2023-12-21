@@ -6,21 +6,23 @@ import '../widgets/button.dart';
 import 'package:warmindo_pos/main.dart';
 
 class DetailPage extends StatefulWidget {
-  int status;
+  final int status;
   final String date;
   final String transactionID;
   final String noMeja;
   final String namaPelanggan;
+  final int diskon;
   final String total;
   final String metodePembayaran;
 
-  DetailPage({
+  const DetailPage({
     super.key,
     required this.status,
     required this.date,
     required this.transactionID,
     required this.noMeja,
     required this.namaPelanggan,
+    required this.diskon,
     required this.total,
     required this.metodePembayaran,
   });
@@ -30,6 +32,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  List<dynamic>? transactionDetail;
   String selectedWarung = 'Warung 1';
   List<String> warungList = ['Warung 1', 'Warung 2', 'Warung 3', 'Warung 4'];
 
@@ -56,6 +59,29 @@ class _DetailPageState extends State<DetailPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    fetchData(); // Panggil fungsi untuk mengambil detail transaksi saat halaman dimuat
+  }
+
+  Future<dynamic> getDetailTransaction() async {
+    final int dbTransId = int.parse(
+        widget.transactionID.substring(widget.transactionID.length - 1));
+    final response = await supabase
+        .from('detail_transaksi')
+        .select()
+        .eq('idtransaksi', dbTransId);
+    return response;
+  }
+
+  Future<void> fetchData() async {
+    final response = await getDetailTransaction();
+    setState(() {
+      transactionDetail = response;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final status = widget.status;
     final idTransaksi = widget.transactionID;
@@ -64,6 +90,15 @@ class _DetailPageState extends State<DetailPage> {
     final namaPelanggan = widget.namaPelanggan;
     final total = widget.total;
     final metodePembayaran = widget.metodePembayaran;
+    final diskon = widget.diskon;
+
+    if (transactionDetail == null) {
+      return CircularProgressIndicator(); // Tampilkan indikator loading jika data masih diambil
+    }
+    final detail = transactionDetail?[0];
+    final menu = detail['namamenu'];
+    final harga = detail['harga'];
+    final jumlah = detail['jumlah'];
 
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -151,6 +186,58 @@ class _DetailPageState extends State<DetailPage> {
               ],
             ),
             gapH12,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Nama Menu',
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+                Text(
+                  menu,
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Harga',
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+                Text(
+                  harga.toString(),
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Jumlah',
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+                Text(
+                  jumlah.toString(),
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Diskon',
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+                Text(
+                  diskon.toString(),
+                  style: blackTextStyle.copyWith(fontWeight: medium),
+                ),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -253,10 +340,6 @@ class _DetailPageState extends State<DetailPage> {
                               .update({'status': newStatus}).eq(
                                   'idtransaksi', dbTransactionID);
 
-                          setState(() {
-                            widget.status = newStatus;
-                          });
-
                           Navigator.pop(context, newStatus);
                         }),
                   if (widget.status == 3)
@@ -283,10 +366,6 @@ class _DetailPageState extends State<DetailPage> {
                             .from('transaksi')
                             .update({'status': newStatus}).eq(
                                 'idtransaksi', dbTransactionID);
-
-                        setState(() {
-                          widget.status = newStatus;
-                        });
 
                         Navigator.pop(context, newStatus);
                       },

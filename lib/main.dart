@@ -65,7 +65,7 @@ class _MainAppState extends State<MainApp> {
                   pageIndex: 0,
                 ),
             '/transaksi-page': (context) => const TransaksiPage(),
-            '/detail-page': (context) => DetailPage(
+            '/detail-page': (context) => const DetailPage(
                   status: 0,
                   date: "",
                   transactionID: "",
@@ -73,6 +73,7 @@ class _MainAppState extends State<MainApp> {
                   namaPelanggan: "",
                   total: "",
                   metodePembayaran: "",
+                  diskon: 0,
                 ),
           }),
     );
