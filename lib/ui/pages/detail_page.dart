@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../shared/gaps.dart';
 import '../shared/theme.dart';
 import '../widgets/button.dart';
+import 'package:warmindo_pos/main.dart';
 
 class DetailPage extends StatefulWidget {
-  final int status;
+  int status;
   final String date;
   final String transactionID;
   final String noMeja;
@@ -13,7 +14,7 @@ class DetailPage extends StatefulWidget {
   final String total;
   final String metodePembayaran;
 
-  const DetailPage({
+  DetailPage({
     super.key,
     required this.status,
     required this.date,
@@ -235,12 +236,61 @@ class _DetailPageState extends State<DetailPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Button(
-                      text: "Selesaikan Pemesanan",
+                  if (widget.status == 2) // Periksa status
+                    Button(
+                        text: "Selesaikan Pemesanan",
+                        textColor: kWhiteColor,
+                        startColor: kGreenColor,
+                        endColor: kGreenColor,
+                        onPressed: () async {
+                          final int newStatus = widget.status + 1;
+                          final int dbTransactionID = int.parse(widget
+                              .transactionID
+                              .substring(widget.transactionID.length - 1));
+
+                          final response = await supabase
+                              .from('transaksi')
+                              .update({'status': newStatus}).eq(
+                                  'idtransaksi', dbTransactionID);
+
+                          setState(() {
+                            widget.status = newStatus;
+                          });
+
+                          Navigator.pop(context, newStatus);
+                        }),
+                  if (widget.status == 3)
+                    Button(
+                        text: "",
+                        textColor: kWhiteColor,
+                        startColor: kWhiteColor,
+                        endColor: kWhiteColor,
+                        onPressed: () {}),
+                  if (widget.status != 2 && widget.status != 3)
+                    Button(
+                      text:
+                          "Ubah Status", // Jika status bukan 2 atau 3, tampilkan teks ini
                       textColor: kWhiteColor,
                       startColor: kGreenColor,
                       endColor: kGreenColor,
-                      onPressed: () {})
+                      onPressed: () async {
+                        final int newStatus = widget.status + 1;
+                        final int dbTransactionID = int.parse(widget
+                            .transactionID
+                            .substring(widget.transactionID.length - 1));
+
+                        final response = await supabase
+                            .from('transaksi')
+                            .update({'status': newStatus}).eq(
+                                'idtransaksi', dbTransactionID);
+
+                        setState(() {
+                          widget.status = newStatus;
+                        });
+
+                        Navigator.pop(context, newStatus);
+                      },
+                    ),
                 ],
               ),
             ),

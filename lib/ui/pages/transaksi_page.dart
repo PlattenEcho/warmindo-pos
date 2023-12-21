@@ -162,7 +162,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
                   symbol: 'Rp. ',
                   decimalDigits: 0,
                 ).format(transaction['total'] - transaction['totaldiskon']);
-                final metodePembayaran = transaction['metodepembayaran'];
+                final metodePembayaran =
+                    transaction['metodepembayaran'].replaceAll('_', ' ');
 
                 return TransaksiCard(
                   status: status,
@@ -202,8 +203,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
                       if (shouldDelete ?? false) {}
                     });
                   },
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final updatedStatus = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailPage(
@@ -217,6 +218,9 @@ class _TransaksiPageState extends State<TransaksiPage> {
                             metodePembayaran: metodePembayaran,
                           ),
                         ));
+                    if (updatedStatus != null) {
+                      fetchData();
+                    }
                   },
                 );
               },

@@ -65,7 +65,7 @@ class _MainAppState extends State<MainApp> {
                   pageIndex: 0,
                 ),
             '/transaksi-page': (context) => const TransaksiPage(),
-            '/detail-page': (context) => const DetailPage(
+            '/detail-page': (context) => DetailPage(
                   status: 0,
                   date: "",
                   transactionID: "",
