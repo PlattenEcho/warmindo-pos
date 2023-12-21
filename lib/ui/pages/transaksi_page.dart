@@ -121,13 +121,13 @@ class _TransaksiPageState extends State<TransaksiPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailPage(
-                            status: 1,
-                            date: "24/09/2023",
-                            transactionID: "#ID24092023",
-                            noMeja: "12",
-                            namaPelanggan: "Dzahwan Anforcom",
-                            total: hargaRp,
-                            metodePembayaran: "QRIS",
+                            status: status,
+                            date: tanggal,
+                            transactionID: "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
+                            noMeja: noMeja,
+                            namaPelanggan: namaPelanggan,
+                            total: total,
+                            metodePembayaran: metodePembayaran,
                           ),
                         ));
                   },
