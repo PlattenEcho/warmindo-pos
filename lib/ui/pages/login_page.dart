@@ -9,7 +9,6 @@ import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 import 'package:warmindo_pos/ui/widgets/button.dart';
 import 'package:warmindo_pos/ui/widgets/textfield.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:warmindo_pos/ui/widgets/toast.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,44 +24,44 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> authenticateUser(
       BuildContext context, String username, String password) async {
-    // try {
-    final response = await supabase
-        .from('pengguna')
-        .select('username, password')
-        .eq('username', username)
-        .single();
+    try {
+      final response = await supabase
+          .from('pengguna')
+          .select('idpengguna, username, password')
+          .eq('username', username)
+          .single();
 
-    if (response != null) {
-      final user = response;
-      String storedPassword = user['password'].toString();
-      storedPassword = decryptMyData(storedPassword);
+      if (response != null) {
+        final user = response;
+        String storedPassword = user['password'].toString();
+        storedPassword = decryptMyData(storedPassword);
 
-      if (storedPassword == password) {
-        String id = user['idpengguna'] ?? '1';
-        String name = user['username'];
-        String urlImage = user['foto'] ?? 'default_image_url';
+        if (storedPassword == password) {
+          String id = user['idpengguna'] ?? '1';
+          String name = user['username'];
+          String urlImage = user['foto'] ?? 'default_image_url';
 
-        final pengguna = Pengguna(
-            id: id,
-            username: name,
-            createdAt: DateTime.now(),
-            profileImageUrl: urlImage);
+          final pengguna = Pengguna(
+              id: id,
+              username: name,
+              createdAt: DateTime.now(),
+              profileImageUrl: urlImage);
 
-        UserPreferences.saveUser(pengguna);
+          UserPreferences.saveUser(pengguna);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
-        );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
+        } else {
+          showToast(context, "Username atau Password yang anda masukkan salah");
+        }
       } else {
         showToast(context, "Username atau Password yang anda masukkan salah");
       }
-    } else {
-      showToast(context, "Username atau Password yang anda masukkan salah");
+    } catch (e) {
+      showToast(context, e.toString());
     }
-    // } catch (e) {
-    //   showToast(context, e.toString());
-    // }
   }
 
   @override

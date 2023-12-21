@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warmindo_pos/model/pengguna.dart';
 import 'package:warmindo_pos/services/shared_preferences.dart';
 import 'package:warmindo_pos/ui/pages/start_screen.dart';

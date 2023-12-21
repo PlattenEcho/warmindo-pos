@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:warmindo_pos/model/pengguna.dart';
 import 'package:warmindo_pos/services/shared_preferences.dart';
 import 'package:warmindo_pos/ui/pages/detail_page.dart';
 import 'package:warmindo_pos/ui/pages/login_page.dart';
@@ -38,21 +39,34 @@ class _MainAppState extends State<MainApp> {
           create: (context) => PageCubit(),
         ),
       ],
-      child: MaterialApp(debugShowCheckedModeBanner: false, routes: {
-        '/': (context) =>
-            UserPreferences.getUser() != null ? StartScreen() : MainPage(),
-        '/login-page': (context) => const LoginPage(),
-        '/main-page': (context) => const MainPage(),
-        '/detail-page': (context) => const DetailPage(
-              status: 0,
-              date: "",
-              transactionID: "",
-              noMeja: "",
-              namaPelanggan: "",
-              total: "",
-              metodePembayaran: "",
-            ),
-      }),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: FutureBuilder<Pengguna?>(
+            future: UserPreferences.getUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                final user = snapshot.data;
+                return user != null ? MainPage() : StartScreen();
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
+          ),
+          routes: {
+            // '/': (context) =>
+            //     UserPreferences.getUser() != null ? StartScreen() : MainPage(),
+            '/login-page': (context) => const LoginPage(),
+            '/main-page': (context) => const MainPage(),
+            '/detail-page': (context) => const DetailPage(
+                  status: 0,
+                  date: "",
+                  transactionID: "",
+                  noMeja: "",
+                  namaPelanggan: "",
+                  total: "",
+                  metodePembayaran: "",
+                ),
+          }),
     );
   }
 }
