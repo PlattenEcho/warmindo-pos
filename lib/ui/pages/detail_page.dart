@@ -8,6 +8,7 @@ import 'package:warmindo_pos/main.dart';
 class DetailPage extends StatefulWidget {
   final int status;
   final String date;
+  final int idOnly;
   final String transactionID;
   final String noMeja;
   final String namaPelanggan;
@@ -25,6 +26,7 @@ class DetailPage extends StatefulWidget {
     required this.diskon,
     required this.total,
     required this.metodePembayaran,
+    required this.idOnly,
   });
 
   @override
@@ -33,8 +35,6 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   List<dynamic>? transactionDetail;
-  String selectedWarung = 'Warung 1';
-  List<String> warungList = ['Warung 1', 'Warung 2', 'Warung 3', 'Warung 4'];
 
   late bool mode = true;
   static const List<String> _status = <String>[
@@ -58,10 +58,30 @@ class _DetailPageState extends State<DetailPage> {
     kGreenLightColor,
   ];
 
+  Map<String, dynamic> mapPembayaran = {
+    "cash": "Cash",
+    "qris": "QRIS",
+    "kartu_debit": "Kartu Debit",
+  };
+  String? selectedPaymentMethod;
+
   @override
   void initState() {
     super.initState();
-    fetchData(); // Panggil fungsi untuk mengambil detail transaksi saat halaman dimuat
+    fetchData();
+    getPaymentMethod();
+  }
+
+  Future<void> getPaymentMethod() async {
+    final response = await supabase
+        .from('transaksi')
+        .select('metodepembayaran')
+        .eq('idtransaksi', widget.idOnly)
+        .single();
+
+    setState(() {
+      selectedPaymentMethod = response['metodepembayaran'];
+    });
   }
 
   Future<dynamic> getDetailTransaction() async {
@@ -85,11 +105,11 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final status = widget.status;
     final idTransaksi = widget.transactionID;
+    final idOnly = widget.idOnly;
     // final date = widget.date;
     final noMeja = widget.noMeja;
     final namaPelanggan = widget.namaPelanggan;
     final total = widget.total;
-    final metodePembayaran = widget.metodePembayaran;
     final diskon = widget.diskon;
 
     if (transactionDetail == null) {
@@ -113,7 +133,7 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context, {'updatedData': true});
                         },
                         icon: Icon(
                           Icons.arrow_back,
@@ -245,42 +265,27 @@ class _DetailPageState extends State<DetailPage> {
                   'Metode Pembayaran',
                   style: blackTextStyle.copyWith(fontWeight: medium),
                 ),
-                Text(
-                  metodePembayaran,
-                  style: blackTextStyle.copyWith(fontWeight: medium),
+                DropdownButton<String>(
+                  value: selectedPaymentMethod,
+                  items: mapPembayaran.keys.map((String key) {
+                    return DropdownMenuItem<String>(
+                      value: key,
+                      child: Text(mapPembayaran[key]!),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) async {
+                    setState(() {
+                      selectedPaymentMethod = newValue;
+                    });
+
+                    await supabase
+                        .from('transaksi')
+                        .update({'metodepembayaran': newValue}).eq(
+                            'idtransaksi', idOnly);
+                    fetchData();
+                  },
                 ),
               ],
-            ),
-            DropdownButtonFormField<String>(
-              focusColor: kGreenColor,
-              value: selectedWarung,
-              isExpanded: true,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedWarung = newValue!;
-                });
-              },
-              style: blackTextStyle.copyWith(fontSize: 16),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        BorderSide(color: kBlackColor.withOpacity(0.2))),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: kGreenColor),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              ),
-              icon: Icon(Icons.arrow_drop_down,
-                  color: kGreenColor.withOpacity(0.8)),
-              items: warungList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
             gapH24,
             Text('Total',

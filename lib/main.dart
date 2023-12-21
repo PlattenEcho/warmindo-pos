@@ -77,6 +77,7 @@ class _MainAppState extends State<MainApp> {
                   total: "",
                   metodePembayaran: "",
                   diskon: 0,
+                  idOnly: 0,
                 ),
           }),
     );

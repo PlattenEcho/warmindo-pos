@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../shared/gaps.dart';
-import '../shared/theme.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({

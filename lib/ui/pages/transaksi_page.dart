@@ -150,22 +150,23 @@ class _TransaksiPageState extends State<TransaksiPage> {
                         ),
                       );
                     },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 61, 200, 66),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(255, 61, 200, 66),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                    child: Text(
-                      'Tambah',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 16),
+                      child: Text(
+                        'Tambah',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
+                      ),
                     ),
-                  ),
                   ),
                 ),
               ],
@@ -213,7 +214,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
 
                           final metodePembayaran =
                               mapPembayaran[transaction['metodepembayaran']];
-                final diskon = transaction['totaldiskon'];
+                          final diskon = transaction['totaldiskon'];
 
                           return TransaksiCard(
                             status: status,
@@ -260,6 +261,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                     builder: (context) => DetailPage(
                                       status: status,
                                       date: tanggal,
+                                      idOnly: idtransaksi,
                                       transactionID:
                                           "WT1${tanggal.toString().replaceAll('-', '')}$shift$idtransaksi",
                                       noMeja: noMeja,

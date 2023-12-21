@@ -85,13 +85,13 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
               alignment: Alignment.centerLeft,
               child: ElevatedButton(
                 onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddTransactionPage(),
-                        ),
-                      );
-                    },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddTransactionPage(),
+                    ),
+                  );
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
                     Color.fromARGB(255, 61, 200, 66),
@@ -205,6 +205,7 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
                                         total: "$total,00",
                                         metodePembayaran: metodePembayaran,
                                         diskon: diskon,
+                                        idOnly: idtransaksi,
                                       ),
                                     ));
                                 if (updatedStatus != null) {
