@@ -6,14 +6,12 @@ import '../model/pengguna.dart';
 class UserPreferences {
   static const String _key = 'user';
 
-  // Fungsi untuk menyimpan informasi pengguna ke SharedPreferences
   static Future<void> saveUser(Pengguna user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userJson = jsonEncode(user.toMap());
     prefs.setString(_key, userJson);
   }
 
-  // Fungsi untuk mendapatkan informasi pengguna dari SharedPreferences
   static Future<Pengguna?> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userJson = prefs.getString(_key);
@@ -26,7 +24,6 @@ class UserPreferences {
     }
   }
 
-  // Fungsi untuk menghapus informasi pengguna dari SharedPreferences
   static Future<void> clearUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(_key);

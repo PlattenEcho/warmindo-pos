@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:warmindo_pos/ui/pages/main_page.dart';
 import 'package:warmindo_pos/ui/shared/gaps.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 
@@ -42,13 +43,15 @@ class _DashboardPageState extends State<DashboardPage> {
     final count = res.count;
     int harga = 0;
     int totalHarga = 0;
+    int diskon = 0;
     setState(() {
       transaksiData = data;
       countTransaksi = count;
 
       for (var i = 0; i < count; i++) {
         harga = transaksiData[i]['total'];
-        totalHarga = totalHarga + harga;
+        diskon = transaksiData[i]['totaldiskon'];
+        totalHarga = totalHarga + (harga - diskon);
       }
 
       hargaRp = NumberFormat.currency(
@@ -65,7 +68,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Container(
         color: kWhiteColor,
-        margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
+        margin: const EdgeInsets.only(top: 5, left: 12.5, right: 12.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -241,6 +244,25 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ],
               ),
+            ),
+            gapH12,
+            ElevatedButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  )),
+                  backgroundColor: MaterialStateProperty.all(kGreenColor),
+                  minimumSize: const MaterialStatePropertyAll(
+                      Size(double.infinity, 50))),
+              child: Text("Lihat List Transaksi untuk Shift ini ",
+                  style: whiteTextStyle.copyWith(fontWeight: bold)),
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MainPage(pageIndex: 1)));
+              },
             ),
           ],
         ));

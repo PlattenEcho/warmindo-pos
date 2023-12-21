@@ -7,6 +7,7 @@ import 'package:warmindo_pos/ui/pages/login_page.dart';
 import 'package:warmindo_pos/ui/pages/main_page.dart';
 import 'package:warmindo_pos/ui/pages/start_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:warmindo_pos/ui/pages/transaksi_page.dart';
 
 import 'cubit/page_cubit.dart';
 
@@ -46,7 +47,11 @@ class _MainAppState extends State<MainApp> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 final user = snapshot.data;
-                return user != null ? MainPage() : StartScreen();
+                return user != null
+                    ? MainPage(
+                        pageIndex: 0,
+                      )
+                    : StartScreen();
               } else {
                 return CircularProgressIndicator();
               }
@@ -56,7 +61,10 @@ class _MainAppState extends State<MainApp> {
             // '/': (context) =>
             //     UserPreferences.getUser() != null ? StartScreen() : MainPage(),
             '/login-page': (context) => const LoginPage(),
-            '/main-page': (context) => const MainPage(),
+            '/main-page': (context) => const MainPage(
+                  pageIndex: 0,
+                ),
+            '/transaksi-page': (context) => const TransaksiPage(),
             '/detail-page': (context) => const DetailPage(
                   status: 0,
                   date: "",

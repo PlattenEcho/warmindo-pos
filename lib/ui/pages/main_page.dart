@@ -5,14 +5,26 @@ import 'package:warmindo_pos/ui/pages/transaksi_page.dart';
 import 'package:warmindo_pos/ui/shared/theme.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int pageIndex;
+  const MainPage({
+    super.key,
+    required this.pageIndex,
+  });
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  DateTime tanggal = DateTime.now();
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.pageIndex;
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

@@ -36,7 +36,10 @@ Future<void> authenticateUser(
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
+          MaterialPageRoute(
+              builder: (context) => const MainPage(
+                    pageIndex: 0,
+                  )),
         );
       } else {
         showToast(context, "Username atau Password yang anda masukkan salah");
