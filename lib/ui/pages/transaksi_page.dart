@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:warmindo_pos/ui/pages/detail_page.dart';
+import 'package:warmindo_pos/ui/pages/add_transaction_page.dart';
 import 'package:warmindo_pos/ui/widgets/card.dart';
 import 'package:warmindo_pos/main.dart';
 
@@ -138,12 +139,34 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 ),
 
                 SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {},
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddTransactionPage(),
+                        ),
+                      );
+                    },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 61, 200, 66)),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 61, 200, 66),
+                    ),
                   ),
-                  child: Text('Tambah', style:whiteTextStyle.copyWith(fontWeight: bold)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    child: Text(
+                      'Tambah',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        ),
+                    ),
+                  ),
+                  ),
                 ),
               ],
             ),
