@@ -82,7 +82,7 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
           children: [
             SizedBox(height: 10),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -97,9 +97,8 @@ class _TransaksiByDateShift extends State<TransaksiByDateShift> {
                     Color.fromARGB(255, 61, 200, 66),
                   ),
                 ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: Text(
                     'Tambah',
                     style: TextStyle(

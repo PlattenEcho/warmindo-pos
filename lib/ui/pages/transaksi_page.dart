@@ -138,7 +138,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                   }).toList(),
                 ),
 
-                SizedBox(height: 10),
+                gapH12,
                 Align(
                   alignment: Alignment.centerLeft,
                   child: ElevatedButton(
@@ -152,26 +152,22 @@ class _TransaksiPageState extends State<TransaksiPage> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 61, 200, 66),
+                        kGreenColor,
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 16),
-                      child: Text(
-                        'Tambah',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Text('Tambah',
+                          style: whiteTextStyle.copyWith(fontWeight: bold)),
                     ),
                   ),
                 ),
               ],
             ),
           ),
+          gapH12,
           Expanded(
               child: FutureBuilder(
                   future: getDataTransaction(),

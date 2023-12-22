@@ -113,7 +113,14 @@ class _DetailPageState extends State<DetailPage> {
     final diskon = widget.diskon;
 
     if (transactionDetail == null) {
-      return CircularProgressIndicator(); // Tampilkan indikator loading jika data masih diambil
+      return Container(
+          color: kWhiteColor,
+          child: Center(
+            child: Text(
+              "Loading...",
+              style: blackTextStyle.copyWith(),
+            ),
+          ));
     }
     final detail = transactionDetail?[0];
     final menu = detail['namamenu'];
